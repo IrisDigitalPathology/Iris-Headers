@@ -7,6 +7,7 @@ cmake_minimum_required(VERSION 3.11...3.30)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(IRIS_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include/)
+set(IRIS_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src/)
 Project (IrisHeaders)
 include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
@@ -37,5 +38,17 @@ if (${PROJECT_IS_TOP_LEVEL})
         FILE IrisHeadersConfig.cmake
         NAMESPACE "Iris::"
         DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/Iris
+    )
+endif()
+
+
+if (NOT ${PROJECT_IS_TOP_LEVEL})
+    add_library(IrisBuffer STATIC)
+    target_include_directories (
+        IrisBuffer PUBLIC
+        ${IRIS_INCLUDE_DIR}
+    )
+    target_sources ( 
+        IrisBuffer PUBLIC ${IRIS_SOURCE_DIR}/IrisBuffer.cpp
     )
 endif()

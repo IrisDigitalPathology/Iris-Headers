@@ -4,8 +4,15 @@
 //
 //  Created by Ryan Landvater on 8/2/22.
 //
+#if IRIS_INTERNAL
 #include "IrisCorePriv.hpp"
-
+#else
+#include "IrisCore.hpp"
+#include "IrisBuffer.hpp"
+    #if IRIS_DEBUG
+    #include <assert.h>
+    #endif
+#endif
 namespace Iris {
 // MARK: - IRIS EXPOSED API
 //  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
@@ -60,7 +67,9 @@ __INTERNAL__Buffer::__INTERNAL__Buffer (BufferReferenceStrength _ref) noexcept :
 _strength   (_ref)
 {
     // Only create a buffer with strong reference
+    #if IRIS_DEBUG
     assert  (_ref == REFERENCE_STRONG);
+    #endif
 }
 __INTERNAL__Buffer::__INTERNAL__Buffer (BufferReferenceStrength _ref, size_t __C) noexcept :
 _strength   (_ref),
@@ -68,7 +77,9 @@ _capacity   (__C),
 _data       (malloc(__C))
 {
     // Only create a buffer with strong reference
+    #if IRIS_DEBUG
     assert  (_ref == REFERENCE_STRONG);
+    #endif
 }
 __INTERNAL__Buffer::__INTERNAL__Buffer (BufferReferenceStrength _ref, const void* const __D, size_t __S) noexcept :
 _strength   (_ref),
@@ -77,7 +88,9 @@ _size       (__S),
 _data       (nullptr)
 {
     // Ensure a correct reference strength is assigned.
+    #if IRIS_DEBUG
     assert  (static_cast<int>(_strength) < 2);
+    #endif
     
     // Assign the correct
     switch (_strength) {
@@ -147,7 +160,9 @@ void* __INTERNAL__Buffer::append(size_t __S)
             return NULL;
         // Ensure we didn't make the buffer smaller.
         // resize can do that and that would be awkward...
+        #if IRIS_DEBUG
         assert  (_capacity >= __OLD_SIZE && "Attempted to expand a buffer but actally reduced the size...");
+        #endif
         if      (_capacity <  __OLD_SIZE)
             return NULL;
     }
@@ -168,7 +183,9 @@ Result __INTERNAL__Buffer::append(void *__D, size_t __S)
             return IRIS_FAILURE;
         // Ensure we didn't make the buffer smaller.
         // resize can do that and that would be awkward...
+        #if IRIS_DEBUG
         assert  (_size <= __OLD_SIZE);
+        #endif
         if      (_size <= __OLD_SIZE)
             return IRIS_FAILURE;
     }
@@ -203,8 +220,10 @@ Result __INTERNAL__Buffer::resize(size_t _NS)
     // resize a weak reference. You CANNOT do this as
     // it may invalidate the original pointer, which this
     // Buffer only has accesss privilage to.
+    #if IRIS_DEBUG
     assert(_strength == REFERENCE_STRONG);
-    if (_strength == REFERENCE_WEAK) 
+    #endif
+    if (_strength == REFERENCE_WEAK)
         return IRIS_FAILURE;
     
     // IF this is unnessary, return true
