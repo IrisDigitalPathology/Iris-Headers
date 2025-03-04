@@ -20,6 +20,7 @@ FetchContent_Declare (
     GIT_TAG "origin/main"
     GIT_SHALLOW ON
 )
+FetchContent_MakeAvailable(IrisHeaders)
 ```
 and included (without needing to add IrisHeaders to include_directories) as follows:
 ```CMake
