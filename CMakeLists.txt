@@ -41,7 +41,6 @@ if (${PROJECT_IS_TOP_LEVEL})
     )
 endif()
 
-
 if (NOT ${PROJECT_IS_TOP_LEVEL})
     add_library(IrisBuffer STATIC)
     target_include_directories (

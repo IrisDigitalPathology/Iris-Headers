@@ -10,19 +10,9 @@
  *
  */
 
-#include <stdint.h>
-#include <cstring>
-#include <vector>
-#include <map>
-#include <set>
-#include <unordered_map>
-#include <thread>
-#include <shared_mutex>
-#include <functional>
-#include "IrisTypes.hpp"
-
 #ifndef IrisCore_h
 #define IrisCore_h
+#include "IrisTypes.hpp"
 namespace Iris {
 /**
  * @brief Get the major version of Iris Core within the binaries.

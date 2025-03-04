@@ -39,6 +39,7 @@ using       Slide           = std::shared_ptr<class __INTERNAL__Slide>;
 using       Cache           = std::shared_ptr<class __INTERNAL__Cache>;
 using       Encoder         = std::shared_ptr<class __INTERNAL__Encoder>;
 using       Tile            = std::shared_ptr<class __INTERNAL__Tile>;
+using       File            = std::shared_ptr<class __INTERNAL__File>;
 using       Version         = Iris::Version;
 using       Result          = Iris::Result;
 using       Buffer          = Iris::Buffer;
@@ -208,6 +209,19 @@ struct EncoderProgress {
     float           progress                = 0.f;
     std::string     dstFilePath;
     std::string     errorMsg;
+};
+// MARK: - FILE CONVENIENCE WRAPPERS
+struct FileCreateInfo {
+    std::string     filePath;
+    size_t          initial_size = 5E6;
+};
+struct FileOpenInfo {
+    std::string     filePath;
+    bool            writeAccess = false;
+};
+struct FileResizeInfo {
+    size_t          size;
+    bool            pageAlign           = false;
 };
 } // END IRIS CODEC NAMESPACE
 #endif /* IrisCodecTypes_h */

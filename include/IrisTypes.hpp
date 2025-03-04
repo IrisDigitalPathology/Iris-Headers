@@ -17,21 +17,61 @@
 #ifndef IrisTypes_h
 #define IrisTypes_h
 
-#ifdef IRIS_512
-#define TILE_PIX_LENGTH     512U
-#define TILE_PIX_FLOAT      512.f
-#define TILE_PIX_AREA       262144U
-#define TILE_PIX_BYTES_RGB  786432U
-#define TILE_PIX_BYTES_RGBA 1048576U
-#else
+#include <set>
+#include <mutex>
+#include <thread>
+#include <vector>
+#include <cstring>
+#include <stdint.h>
+#include <functional>
+#include <shared_mutex>
+#include <unordered_map>
+#include <unordered_set>
+
 #define TILE_PIX_LENGTH     256U
 #define TILE_PIX_FLOAT      256.f
 #define TILE_PIX_AREA       65536U
 #define TILE_PIX_BYTES_RGB  196608U
 #define TILE_PIX_BYTES_RGBA 262144U
-#endif
-
 namespace Iris {
+using BYTE                  = uint8_t;
+using BYTE_ARRAY            = std::vector<BYTE>;
+using CString               = std::vector<char>;
+using CStringList           = std::vector<const char*>;
+using atomic_bool           = std::atomic<bool>;
+using atomic_byte           = std::atomic<uint8_t>;
+using atomic_sint8          = std::atomic<int8_t>;
+using atomic_uint8          = std::atomic<uint8_t>;
+using atomic_sint16         = std::atomic<int16_t>;
+using atomic_uint16         = std::atomic<uint16_t>;
+using atomic_sint32         = std::atomic<int32_t>;
+using atomic_uint32         = std::atomic<uint32_t>;
+using atomic_sint64         = std::atomic<int64_t>;
+using atomic_uint64         = std::atomic<uint64_t>;
+using atomic_size           = std::atomic<size_t>;
+using atomic_float          = std::atomic<float>;
+using Threads               = std::vector<std::thread>;
+using Mutex                 = std::mutex;
+using MutexLock             = std::unique_lock<Mutex>;
+using SharedMutexLock       = std::shared_ptr<MutexLock>;
+using SharedMutex           = std::shared_mutex;
+using ExclusiveLock         = std::unique_lock<SharedMutex>;
+using SharedLock            = std::shared_lock<SharedMutex>;
+using ReadLock              = std::shared_lock<SharedMutex>;
+using WriteLock             = std::unique_lock<SharedMutex>;
+using Notification          = std::condition_variable;
+using FilePaths             = std::vector<const char*>;
+using LambdaPtr             = std::function<void()>;
+using CallbackDict          = std::unordered_map<std::string, LambdaPtr>;
+using ViewerWeak            = std::weak_ptr<class __INTERNAL__Viewer>;
+using LayerIndex            = uint32_t;
+using TileIndex             = uint32_t;
+using ImageIndex            = uint32_t;
+using TileIndicies          = std::vector<TileIndex>;
+using TileIndexSet          = std::unordered_set<TileIndex>;
+using ImageIndicies         = std::vector<ImageIndex>;
+using TimePoint             = std::chrono::time_point<std::chrono::system_clock>;
+
 enum ResultFlag : uint32_t {
     IRIS_SUCCESS            = 0,
     IRIS_FAILURE            = 0x00000001,
