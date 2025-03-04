@@ -78,10 +78,12 @@ Result      set_encoder_dst_path    (const Encoder&, const std::string&) noexcep
 //  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 //  These file access methods are offered for convenience
 /// Create a new file for writing
-File    create_file         (const struct FileCreateInfo&);
+File        create_file             (const FileCreateInfo&);
+
 /// Open a file for read or read-write access.
-File    open_file           (const struct FileOpenInfo&);
+File        open_file               (const FileOpenInfo&);
+
 /// Resize a file
-Result  resize_file         (const File&, const struct FileResizeInfo&);
+Result      resize_file             (const File&, const FileResizeInfo&);
 }
 #endif /* IrisCodecCore_h */
