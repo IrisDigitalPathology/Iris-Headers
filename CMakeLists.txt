@@ -8,18 +8,18 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(IRIS_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include/)
 set(IRIS_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src/)
-Project (IrisHeaders)
+Project (IrisHeadersProj LANGUAGES CXX)
 include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
 
-add_library(Iris_Headers INTERFACE)
+add_library(IrisHeaders INTERFACE)
 target_include_directories(
-    Iris_Headers INTERFACE
+    IrisHeaders INTERFACE
     $<BUILD_INTERFACE:${IRIS_INCLUDE_DIR}>
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
 target_sources(
-    Iris_Headers INTERFACE FILE_SET HEADERS
+    IrisHeaders INTERFACE FILE_SET HEADERS
     BASE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/include/
     FILES 
     ${IRIS_INCLUDE_DIR}/IrisTypes.hpp
@@ -29,7 +29,7 @@ target_sources(
 )
 if (${PROJECT_IS_TOP_LEVEL})
     install(
-        TARGETS Iris_Headers
+        TARGETS IrisHeaders
         EXPORT IrisHeadersConfig
         FILE_SET HEADERS DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/Iris
     )
