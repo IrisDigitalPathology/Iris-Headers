@@ -39,13 +39,13 @@ void*  Buffer_write_into_buffer (Buffer &__BUF, size_t& bytes)
     switch (__BUF->get_strength()) {
         case REFERENCE_WEAK:
             if (__BUF->size() < bytes) {
-                std::stringstream __ERROR;
-                __ERROR << "Attempting to write " << bytes << " bytes "
-                        << "into a WEAK IrisCodec buffer with capacity "
-                        << __BUF->size() << "bytes. Either convert the "
-                        << "buffer into a strong reference to allow expansion "
-                        << "or wrap a larger allocation with sufficient space.\n";
-                throw std::runtime_error(__ERROR.str());
+                throw std::runtime_error
+                (std::string("Attempting to write " + 
+                    std::to_string(bytes) + 
+                    " bytes into a WEAK IrisCodec buffer with capacity "+
+                    std::to_string(bytes) + 
+                    " bytes.Either convert the buffer into a strong reference to allow expansion or wrap a larger allocation with sufficient space."
+                ));
             }
             return __BUF->data();
         case REFERENCE_STRONG:

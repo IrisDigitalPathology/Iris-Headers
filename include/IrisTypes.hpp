@@ -16,17 +16,20 @@
 
 #ifndef IrisTypes_h
 #define IrisTypes_h
-
 #include <set>
 #include <mutex>
 #include <thread>
 #include <vector>
+#include <string>
 #include <cstring>
 #include <stdint.h>
 #include <functional>
 #include <shared_mutex>
 #include <unordered_map>
 #include <unordered_set>
+#ifdef _WIN32
+#include <Windows.h>
+#endif
 
 #define TILE_PIX_LENGTH     256U
 #define TILE_PIX_FLOAT      256.f
@@ -93,8 +96,8 @@ struct Result {
     Result                  (const ResultFlag& __f, const std::string& __s) :
                             flag (__f), message(__s){}
     Result& operator =      (const ResultFlag& __f) {flag = __f; return *this;}
-    bool operator    ==     (const bool& __b) const {return flag == __b?IRIS_SUCCESS:IRIS_FAILURE;}
-    bool operator    !=     (const bool& __b) const {return flag != __b?IRIS_SUCCESS:IRIS_FAILURE;}
+    bool operator    ==     (const bool& __b) const {return (bool)flag == __b?IRIS_SUCCESS:IRIS_FAILURE;}
+    bool operator    !=     (const bool& __b) const {return (bool)flag != __b?IRIS_SUCCESS:IRIS_FAILURE;}
     bool operator    ==     (const ResultFlag& __f) const  {return flag == __f;}
     bool operator    !=     (const ResultFlag& __f) const  {return flag != __f;}
 };
