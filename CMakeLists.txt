@@ -28,17 +28,19 @@ target_sources(
     ${IRIS_INCLUDE_DIR}/IrisCodecCore.hpp
 )
 
-install(
-    TARGETS IrisHeaders
-    EXPORT IrisHeadersConfig
-    FILE_SET HEADERS DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/Iris
-)
-install(
-    EXPORT IrisHeadersConfig
-    FILE IrisHeadersConfig.cmake
-    NAMESPACE "Iris::"
-    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/Iris
-)
+if (${PROJECT_IS_TOP_LEVEL})
+    install(
+        TARGETS IrisHeaders
+        EXPORT IrisHeadersConfig
+        FILE_SET HEADERS DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/Iris
+    )
+    install(
+        EXPORT IrisHeadersConfig
+        FILE IrisHeadersConfig.cmake
+        NAMESPACE "Iris::"
+        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/Iris
+    )
+endif()
 
 if (NOT ${PROJECT_IS_TOP_LEVEL})
     add_library(IrisBuffer STATIC)
