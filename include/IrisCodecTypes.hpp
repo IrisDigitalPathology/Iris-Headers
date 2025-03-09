@@ -46,6 +46,9 @@ using       Buffer          = Iris::Buffer;
 using       Extent          = Iris::Extent;
 using       Format          = Iris::Format;
 using       AnnotationTypes = Iris::AnnotationTypes;
+using       Annotation      = Iris::Annotation;
+using       Annotations     = Iris::Annotations;
+using       AnnotationGroup = Iris::AnnotationGroup;
 using       Mutex           = std::mutex;
 using       Offset          = uint64_t;
 using       Size            = uint64_t;
@@ -95,19 +98,6 @@ struct Image {
     Format          format                  = Iris::FORMAT_UNDEFINED;
     Orientation     orientation             = ORIENTATION_0;
 };
-struct Annotation {
-    Slide           slide                   = NULL;
-    AnnotationTypes type                    = Iris::ANNOTATION_UNDEFINED;
-    Buffer          data                    = NULL;
-    float           xLocation               = 0.f;
-    float           yLocation               = 0.f;
-    float           xSize                   = 0.f;
-    float           ySize                   = 0.f;
-    uint32_t        width                   = 0;
-    uint32_t        height                  = 0;
-};
-using Annotations = std::unordered_map<uint32_t, Annotation>;
-
 /// Slide metadata containing information about the Iris File Extension slide file.
 struct Metadata {
     /// List of associated / ancillary image labels describing the associated image (*eg. Label, Thumbnail*)
@@ -209,19 +199,6 @@ struct EncoderProgress {
     float           progress                = 0.f;
     std::string     dstFilePath;
     std::string     errorMsg;
-};
-// MARK: - FILE CONVENIENCE WRAPPERS
-struct FileCreateInfo {
-    std::string     filePath;
-    size_t          initial_size = 5E6;
-};
-struct FileOpenInfo {
-    std::string     filePath;
-    bool            writeAccess = false;
-};
-struct FileResizeInfo {
-    size_t          size;
-    bool            pageAlign           = false;
 };
 } // END IRIS CODEC NAMESPACE
 #endif /* IrisCodecTypes_h */

@@ -17,6 +17,7 @@
 #ifndef IrisTypes_h
 #define IrisTypes_h
 #include <set>
+#include <map>
 #include <mutex>
 #include <thread>
 #include <vector>
@@ -28,6 +29,7 @@
 #include <unordered_map>
 #include <unordered_set>
 #ifdef _WIN32
+#define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 #endif
 
@@ -95,6 +97,7 @@ struct Result {
     Result                  (const ResultFlag& __f) : flag(__f) {}
     Result                  (const ResultFlag& __f, const std::string& __s) :
                             flag (__f), message(__s){}
+    operator bool           () {return flag == IRIS_SUCCESS;}
     Result& operator =      (const ResultFlag& __f) {flag = __f; return *this;}
     bool operator    ==     (const bool& __b) const {return (bool)flag == __b?IRIS_SUCCESS:IRIS_FAILURE;}
     bool operator    !=     (const bool& __b) const {return (bool)flag != __b?IRIS_SUCCESS:IRIS_FAILURE;}
@@ -248,6 +251,9 @@ struct ViewerZoomScope {
  * @brief Defines the image encoding format for an image annotation.
  * 
  */
+/** \def SlideAnnotation::format
+ * The AnnotationFormat of the image data to be rendered
+ */
 enum AnnotationTypes : uint8_t {
     ANNOTATION_UNDEFINED                    = 0,
     ANNOTATION_PNG                          = 1,
@@ -255,9 +261,26 @@ enum AnnotationTypes : uint8_t {
     ANNOTATION_SVG                          = 3,
     ANNOTATION_TEXT                         = 4,
 };
-/** \def SlideAnnotation::format
- * The AnnotationFormat of the image data to be rendered
- */
+
+struct Annotation {
+    using           Identifier              = uint32_t;
+    Slide           slide                   = NULL;
+    AnnotationTypes type                    = Iris::ANNOTATION_UNDEFINED;
+    Buffer          data                    = NULL;
+    float           xLocation               = 0.f;
+    float           yLocation               = 0.f;
+    float           xSize                   = 0.f;
+    float           ySize                   = 0.f;
+    uint32_t        width                   = 0;
+    uint32_t        height                  = 0;
+};
+
+using Annotations = std::unordered_map<Annotation::Identifier, Annotation>;
+
+struct AnnotationGroup :
+public std::unordered_set<Annotation::Identifier> {
+    std::string     label;
+};
 /**
  * @brief Structure defining requirements to create an image-based
  * slide annotation.

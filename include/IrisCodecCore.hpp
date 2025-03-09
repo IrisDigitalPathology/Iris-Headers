@@ -72,18 +72,5 @@ Result      get_encoder_src         (const Encoder&, std::string& src_string) no
 Result      get_encoder_dst_path    (const Encoder&, std::string& dst_string) noexcept;
 Result      set_encoder_src         (const Encoder&, const std::string&) noexcept;
 Result      set_encoder_dst_path    (const Encoder&, const std::string&) noexcept;
-
-//  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
-//      File Convenience Wrapper                                            //
-//  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
-//  These file access methods are offered for convenience
-/// Create a new file for writing
-File        create_file             (const FileCreateInfo&);
-
-/// Open a file for read or read-write access.
-File        open_file               (const FileOpenInfo&);
-
-/// Resize a file
-Result      resize_file             (const File&, const FileResizeInfo&);
 }
 #endif /* IrisCodecCore_h */
