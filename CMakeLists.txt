@@ -41,14 +41,3 @@ if (${PROJECT_IS_TOP_LEVEL})
         DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/Iris
     )
 endif()
-
-if (NOT ${PROJECT_IS_TOP_LEVEL})
-    add_library(IrisBuffer STATIC)
-    target_include_directories (
-        IrisBuffer PUBLIC
-        ${IRIS_INCLUDE_DIR}
-    )
-    target_sources ( 
-        IrisBuffer PUBLIC ${IRIS_SOURCE_DIR}/IrisBuffer.cpp
-    )
-endif()
