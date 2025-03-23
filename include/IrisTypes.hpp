@@ -22,12 +22,14 @@
 #include <thread>
 #include <vector>
 #include <string>
+#include <memory>
 #include <cstring>
 #include <stdint.h>
 #include <functional>
 #include <shared_mutex>
 #include <unordered_map>
 #include <unordered_set>
+#include <condition_variable>
 #ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
