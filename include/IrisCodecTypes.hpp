@@ -43,14 +43,14 @@ namespace IrisCodec {
  * or the Iris Codec compression system. The context may be created using Iris GPU Vulkan
  * instance and device wrappers for direct pipeline integration with a rendering system.
  */
-using       Context         = std::shared_ptr<class __INTERNAL__Context>;
+using       Context         = IRIS_EXPORT std::shared_ptr<class __INTERNAL__Context>;
 
 /**
  * @brief Iris Codec Encoded slide convenience wrapper. This CANNOT wrap other
  * file types (such as OpenSlide files).
  * 
  */
-using       Slide           = std::shared_ptr<class __INTERNAL__Slide>;
+using       Slide           = IRIS_EXPORT std::shared_ptr<class __INTERNAL__Slide>;
 
 /**
  * @brief Local temporary WSI file cache with a variety of uses. See description.
@@ -67,7 +67,7 @@ using       Slide           = std::shared_ptr<class __INTERNAL__Slide>;
  * WARNING: It is up to you to ensure the byte stream type matches the CACHE_ACCESS
  * flag when writing to the cache.  
  */
-using       Cache           = std::shared_ptr<class __INTERNAL__Cache>;
+using       Cache           = IRIS_EXPORT std::shared_ptr<class __INTERNAL__Cache>;
 
 /**
  * @brief Encodes a single whole slide image from another WSI format or Cache at a time
@@ -79,7 +79,7 @@ using       Cache           = std::shared_ptr<class __INTERNAL__Cache>;
  * or decompressed based upon Cache settings).
  * 
  */
-using       Encoder         = std::shared_ptr<class __INTERNAL__Encoder>;
+using       Encoder         = IRIS_EXPORT std::shared_ptr<class __INTERNAL__Encoder>;
 
 // Additional types
 using       Version         = Iris::Version;
