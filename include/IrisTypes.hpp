@@ -38,13 +38,28 @@
 #ifndef IRIS_EXPORT_API
 #define IRIS_EXPORT_API     true
 #endif
+#if defined(_MSC_VER)
+#ifdef _EXPORTING
+   #define IRIS_DECLSPEC    __declspec(dllexport)
+#else
+   #define IRIS_DECLSPEC    __declspec(dllimport)
+#endif
+#endif
 #if     IRIS_EXPORT_API
     #ifndef IRIS_EXPORT
+    #if defined(_MSC_VER)
+    #define IRIS_EXPORT     __declspec(dllexport)
+    #else
     #define IRIS_EXPORT     __attribute__ ((visibility ("default")))
+    #endif 
     #endif
 #else
     #ifndef IRIS_EXPORT
+    #if defined(_MSC_VER)
+    #define IRIS_EXPORT
+    #else
     #define IRIS_EXPORT     __attribute__ ((visibility ("hidden")))
+    #endif
     #endif
 #endif
 #define TILE_PIX_LENGTH     256U
