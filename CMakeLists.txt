@@ -27,6 +27,9 @@ target_sources(
     ${IRIS_INCLUDE_DIR}/IrisCodecTypes.hpp
     ${IRIS_INCLUDE_DIR}/IrisCodecCore.hpp
 )
+if(NOT ${PROJECT_IS_TOP_LEVEL})
+    
+endif(NOT ${PROJECT_IS_TOP_LEVEL})
 
 if (${PROJECT_IS_TOP_LEVEL})
     install(

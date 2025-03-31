@@ -82,9 +82,14 @@ using TimePoint             = std::chrono::time_point<std::chrono::system_clock>
 
 enum ResultFlag : uint32_t {
     IRIS_SUCCESS            = 0,
-    IRIS_FAILURE            = 0x00000001,
-    IRIS_UNINITIALIZED      = 0x00000002,
-    IRIS_VALIDATION_FAILURE = 0x00000004,
+    
+    IRIS_FAILURE            = 0x0000FFFF,
+    IRIS_UNINITIALIZED      = 0x00000001,
+    IRIS_VALIDATION_FAILURE = 0x00000002,
+    
+    IRIS_WARNING            = 0xFFFF0000,
+    IRIS_WARNING_VALIDATION = 0x00010000,
+    
     RESULT_MAX_ENUM         = 0xFFFFFFFF,
 };
 /**
@@ -101,9 +106,10 @@ struct Result {
     Result                  (const ResultFlag& __f, const std::string& __s) :
                             flag (__f), message(__s){}
     operator bool           () {return flag == IRIS_SUCCESS;}
-    Result& operator =      (const ResultFlag& __f) {flag = __f; return *this;}
+    Result& operator =      (const ResultFlag __f) {flag = __f; return *this;}
     bool operator    ==     (const bool& __b) const {return (bool)flag == __b?IRIS_SUCCESS:IRIS_FAILURE;}
     bool operator    !=     (const bool& __b) const {return (bool)flag != __b?IRIS_SUCCESS:IRIS_FAILURE;}
+    bool operator    &      (const ResultFlag __f)  const  {return flag & __f;}
     bool operator    ==     (const ResultFlag& __f) const  {return flag == __f;}
     bool operator    !=     (const ResultFlag& __f) const  {return flag != __f;}
 };
@@ -350,15 +356,15 @@ struct Extent {
  */
 enum Format : uint8_t {
     /// @brief Invalid format indicating a format was not selected
-    FORMAT_UNDEFINED,
+    FORMAT_UNDEFINED    = 0 ,
     /// @brief 8-bit blue, 8-bit green, 8-bit red, no alpha
-    FORMAT_B8G8R8,
+    FORMAT_B8G8R8       = 1,
     /// @brief 8-bit red, 8-bit green, 8-bit blue, no alpha
-    FORMAT_R8G8B8,
+    FORMAT_R8G8B8       = 2,
     /// @brief 8-bit blue, 8-bit green, 8-bit red, 8-bit alpha
-    FORMAT_B8G8R8A8,
+    FORMAT_B8G8R8A8     = 3,
     /// @brief 8-bit red, 8-bit green, 8-bit blue, 8-bit alpha
-    FORMAT_R8G8B8A8,
+    FORMAT_R8G8B8A8     = 4,
 };
 /**
  * @brief Information to open a slide file located on a local volume.
