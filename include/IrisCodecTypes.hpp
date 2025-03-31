@@ -95,44 +95,44 @@ using       BYTE            = Iris::BYTE;
 using       Mutex           = std::mutex;
 using       Offset          = uint64_t;
 using       Size            = uint64_t;
-struct ContextCreateInfo {
+struct IRIS_EXPORT ContextCreateInfo {
     Iris::Device    device                  = nullptr;
 };
 /// Form of encoding used to generate compressed tile bytestreams
-enum Encoding : uint8_t {
+enum IRIS_EXPORT Encoding : uint8_t {
     TILE_ENCODING_UNDEFINED                 = 0,
-    TILE_ENCODING_IRIS,
-    TILE_ENCODING_JPEG,
-    TILE_ENCODING_AVIF,
+    TILE_ENCODING_IRIS                      = 1,
+    TILE_ENCODING_JPEG                      = 2,
+    TILE_ENCODING_AVIF                      = 3,
     ENCODING_DEFAULT                        = TILE_ENCODING_JPEG //v2025.1 - will change
 };
-enum MetadataType : uint8_t {
+enum IRIS_EXPORT MetadataType : uint8_t {
     METADATA_UNDEFINED                      = 0,
-    METADATA_I2S,
-    METADATA_DICOM,
+    METADATA_I2S                            = 1,
+    METADATA_DICOM                          = 2,
     METADATA_FREE_TEXT                      = METADATA_I2S,
 };
-struct Attributes :
+struct IRIS_EXPORT Attributes :
 public std::unordered_map<std::string, std::u8string> {
     MetadataType    type                    = METADATA_UNDEFINED;
     uint16_t        version                 = 0;
 };
-enum ImageEncoding : uint8_t {
+enum IRIS_EXPORT ImageEncoding : uint8_t {
     IMAGE_ENCODING_UNDEFINED                = 0,
     IMAGE_ENCODING_PNG                      = 1,
     IMAGE_ENCODING_JPEG                     = 2,
     IMAGE_ENCODING_AVIF                     = 3,
 };
-enum ImageOrientation : uint16_t {
-    ORIENTATION_0                           = 0,
-    ORIENTATION_90                          = 90,
-    ORIENTATION_180                         = 180,
-    ORIENTATION_270                         = 270,
+enum IRIS_EXPORT ImageOrientation : uint16_t {
+    ORIENTATION_0                           = 0x0000, // Half-precision 0.0
+    ORIENTATION_90                          = 0x55A0, // Half-precision 90.0
+    ORIENTATION_180                         = 0x59A0, // Half-precision 180.0
+    ORIENTATION_270                         = 0x5C38, // Half-precision 270.0
     ORIENTATION_minus_90                    = ORIENTATION_270,
     ORIENTATION_minus_180                   = ORIENTATION_180,
     ORIENTATION_minus_270                   = ORIENTATION_90,
 };
-struct Image {
+struct IRIS_EXPORT Image {
     using           Orientation             = ImageOrientation;
     std::string     title;
     Buffer          bytes                   = nullptr;
@@ -142,7 +142,7 @@ struct Image {
     Orientation     orientation             = ORIENTATION_0;
 };
 /// Slide metadata containing information about the Iris File Extension slide file.
-struct Metadata {
+struct IRIS_EXPORT Metadata {
     /// List of associated / ancillary image labels describing the associated image (*eg. Label, Thumbnail*)
     using ImageLabels                       = std::set<std::string>;
     /// List of annotation identifiers within the slide (unique annotation identifiers)
@@ -169,20 +169,20 @@ struct Metadata {
 };
 
 /// Information needed to open a local Iris Encoded (.iris) file with optional defaults assigned.
-struct SlideOpenInfo {
+struct IRIS_EXPORT SlideOpenInfo {
     std::string     filePath;
     Context         context                 = nullptr;
     bool            writeAccess             = false;
 };
 
 /// Iris Encoded File (.iris) metadata information
-struct SlideInfo {
+struct IRIS_EXPORT SlideInfo {
     Format          format                  = Iris::FORMAT_UNDEFINED;
     Encoding        encoding                = TILE_ENCODING_UNDEFINED;
     Extent          extent;
     Metadata        metadata;
 };
-struct SlideTileReadInfo {
+struct IRIS_EXPORT SlideTileReadInfo {
     Slide           slide                   = NULL;
     uint32_t        layerIndex              = 0;
     uint32_t        tileIndex               = 0;
@@ -190,7 +190,7 @@ struct SlideTileReadInfo {
     Format          desiredFormat           = Iris::FORMAT_R8G8B8A8;
 };
 // MARK: - CACHE TYPE DEFINITIONS
-enum CacheEncoding : uint8_t {
+enum IRIS_EXPORT CacheEncoding : uint8_t {
     CACHE_ENCODING_UNDEFINED                = 0,
     CACHE_ENCODING_IRIS                     = TILE_ENCODING_IRIS,
     CACHE_ENCODING_JPEG                     = TILE_ENCODING_JPEG,
@@ -198,16 +198,16 @@ enum CacheEncoding : uint8_t {
     CACHE_ENCODING_LZ,
     CACHE_ENCODING_NO_COMPRESSION
 };
-enum CacheDataAccess {
+enum IRIS_EXPORT CacheDataAccess {
     CACHE_ACCESS_COMPRESS_TILE              = 0, /* Apply codec to compress tile bytes */
     CACHE_ACCESS_DECOMPRESS_TILE            = 0, /* Apply codec to decompress tile bytes */
     CACHE_ACCESS_DIRECT_NO_CODEC            = 1, /* Do not apply any compression codec */
 };
-struct CacheCreateInfo {
+struct IRIS_EXPORT CacheCreateInfo {
     Context         context                 = nullptr;
     CacheEncoding   encodingType            = CACHE_ENCODING_UNDEFINED;
 };
-struct CacheTileReadInfo {
+struct IRIS_EXPORT CacheTileReadInfo {
     Cache           cache                   = NULL;
     uint32_t        layerIndex              = 0;
     uint32_t        tileIndex               = 0;
@@ -215,7 +215,7 @@ struct CacheTileReadInfo {
     Format          desiredFormat           = Iris::FORMAT_R8G8B8A8;
     CacheDataAccess accessType              = CACHE_ACCESS_DECOMPRESS_TILE;
 };
-struct CacheStoreInfo {
+struct IRIS_EXPORT CacheStoreInfo {
     Cache           cache                   = NULL;
     uint32_t        layerIndex              = 0;
     uint32_t        tileIndex               = 0;
@@ -230,7 +230,7 @@ constexpr Quality   QUALITY_DEFAULT         = 90;
 
 /// Available Chroma-Subsampling options. More information at:
 /// https://en.wikipedia.org/wiki/Chroma_subsampling
-enum Subsampling : uint8_t {
+enum IRIS_EXPORT Subsampling : uint8_t {
     SUBSAMPLE_444, // Lossless
     SUBSAMPLE_422,
     SUBSAMPLE_420,
@@ -238,13 +238,13 @@ enum Subsampling : uint8_t {
 };
 
 /// Current status of the encoder object.
-enum EncoderStatus {
+enum IRIS_EXPORT EncoderStatus {
     ENCODER_INACTIVE,
     ENCODER_ACTIVE,
     ENCODER_ERROR,
     ENCODER_SHUTDOWN,
 };
-struct EncodeSlideInfo {
+struct IRIS_EXPORT EncodeSlideInfo {
     std::string     srcFilePath;
     std::string     dstFilePath;
     Format          srcFormat               = Iris::FORMAT_UNDEFINED;
@@ -252,7 +252,7 @@ struct EncodeSlideInfo {
     Format          desiredFormat           = Iris::FORMAT_UNDEFINED;
     Context         context                 = NULL;
 };
-struct EncoderProgress {
+struct IRIS_EXPORT EncoderProgress {
     EncoderStatus   status                  = ENCODER_INACTIVE;
     float           progress                = 0.f;
     std::string     dstFilePath;

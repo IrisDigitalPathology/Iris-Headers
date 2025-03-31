@@ -35,7 +35,18 @@
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 #endif
-
+#ifndef IRIS_EXPORT_API
+#define IRIS_EXPORT_API     true
+#endif
+#if     IRIS_EXPORT_API
+    #ifndef IRIS_EXPORT
+    #define IRIS_EXPORT     __attribute__ ((visibility ("default")))
+    #endif
+#else
+    #ifndef IRIS_EXPORT
+    #define IRIS_EXPORT     __attribute__ ((visibility ("hidden")))
+    #endif
+#endif
 #define TILE_PIX_LENGTH     256U
 #define TILE_PIX_FLOAT      256.f
 #define TILE_PIX_AREA       65536U
@@ -80,7 +91,7 @@ using TileIndexSet          = std::unordered_set<TileIndex>;
 using ImageIndicies         = std::vector<ImageIndex>;
 using TimePoint             = std::chrono::time_point<std::chrono::system_clock>;
 
-enum ResultFlag : uint32_t {
+enum IRIS_EXPORT ResultFlag : uint32_t {
     IRIS_SUCCESS            = 0,
     
     IRIS_FAILURE            = 0x0000FFFF,
@@ -98,7 +109,7 @@ enum ResultFlag : uint32_t {
  * 
  *
  */
-struct Result {
+struct IRIS_EXPORT Result {
     ResultFlag              flag = RESULT_MAX_ENUM;
     std::string             message;
     explicit Result         (){}
@@ -113,7 +124,7 @@ struct Result {
     bool operator    ==     (const ResultFlag& __f) const  {return flag == __f;}
     bool operator    !=     (const ResultFlag& __f) const  {return flag != __f;}
 };
-struct Version {
+struct IRIS_EXPORT Version {
     uint32_t        major   = 0;
     uint32_t        minor   = 0;
     uint32_t        build   = 0;
@@ -131,7 +142,7 @@ struct Version {
  * responsibility to free that data once finished or a memory leak will ensue.
  * 
  */
-enum BufferReferenceStrength {
+enum IRIS_EXPORT BufferReferenceStrength {
     /// @brief Only wraps access to the data. No ownership or ability to resize underlying pointer.
     REFERENCE_WEAK      = 0,
     /// @brief Full ownership. Will free data on buffer destruction. Can resize underlying pointer.
@@ -185,7 +196,7 @@ using Slide  = std::shared_ptr<class  __INTERNAL__Slide>;
  * 
  * Additional runtime parameters will be added as needed in the future.
  */
-struct ViewerCreateInfo {
+struct IRIS_EXPORT ViewerCreateInfo {
     /// @brief Informs the rendering engine of the calling application's name
     const char*         ApplicationName;
     /// @brief Informs the engine of the calling application version
@@ -204,7 +215,7 @@ struct ViewerCreateInfo {
  *  - Apple: macOS and iOS require a __bridge pointer to a CAMetalLayer
  * 
  */
-struct ViewerBindExternalSurfaceInfo {
+struct IRIS_EXPORT ViewerBindExternalSurfaceInfo {
     const Viewer        viewer      = nullptr;  
 #if defined _WIN32
     HINSTANCE           instance    = NULL;    
@@ -214,7 +225,7 @@ struct ViewerBindExternalSurfaceInfo {
 #endif
 };
 
-struct ViewerResizeSurfaceInfo {
+struct IRIS_EXPORT ViewerResizeSurfaceInfo {
     const Viewer        viewer      = nullptr;
     const uint32_t      width       = 0;
     const uint32_t      height      = 0;
@@ -228,7 +239,7 @@ struct ViewerResizeSurfaceInfo {
  * view sapce while -1.0 will shift the scope view to the left by an entire screen.
  * 
  */
-struct ViewerTranslateScope {
+struct IRIS_EXPORT ViewerTranslateScope {
     /// @brief Fraction of *horizontal* viewspace to translate [-1,1](-left, +right)
     float               x_translate = 0.f;
     /// @brief Fraction of *vertical* viewspace to translate [-1,1](-left, +right)
@@ -248,7 +259,7 @@ struct ViewerTranslateScope {
  * or view center (0.5, 0.5).
  * 
  */
-struct ViewerZoomScope {
+struct IRIS_EXPORT ViewerZoomScope {
     /// @brief Fraction of current zoom amount by which to increase or decrease
     float               increment   = 0.f;
     /// @brief Horizontal location of zoom origin (towards or way from this point)
@@ -263,7 +274,7 @@ struct ViewerZoomScope {
 /** \def SlideAnnotation::format
  * The AnnotationFormat of the image data to be rendered
  */
-enum AnnotationTypes : uint8_t {
+enum IRIS_EXPORT AnnotationTypes : uint8_t {
     ANNOTATION_UNDEFINED                    = 0,
     ANNOTATION_PNG                          = 1,
     ANNOTATION_JPEG                         = 2,
@@ -271,7 +282,7 @@ enum AnnotationTypes : uint8_t {
     ANNOTATION_TEXT                         = 4,
 };
 
-struct Annotation {
+struct IRIS_EXPORT Annotation {
     using           Identifier              = uint32_t;
     Slide           slide                   = NULL;
     AnnotationTypes type                    = Iris::ANNOTATION_UNDEFINED;
@@ -286,7 +297,7 @@ struct Annotation {
 
 using Annotations = std::unordered_map<Annotation::Identifier, Annotation>;
 
-struct AnnotationGroup :
+struct IRIS_EXPORT AnnotationGroup :
 public std::unordered_set<Annotation::Identifier> {
     std::string     label;
 };
@@ -301,7 +312,7 @@ public std::unordered_set<Annotation::Identifier> {
  * The engine will immediately begin rendering the image on top of the 
  * rendered slide layers.
  */
-struct AnnotateSlideInfo {
+struct IRIS_EXPORT AnnotateSlideInfo {
     /// @brief AnnotationFormat of the image data to be rendered
     AnnotationTypes    format      = ANNOTATION_UNDEFINED;
     /// @brief x-offset of the current scope view window where the image starts [0,1.f]
@@ -322,7 +333,7 @@ struct AnnotateSlideInfo {
  * The relative scale (zoom amount) as well as how downsampled the layer is relative to 
  * the highest zoom layer (the reciprocal of the scale).
  */
-struct LayerExtent {
+struct IRIS_EXPORT LayerExtent {
     /// @brief Number of horizontal 256 pixel tiles
     uint32_t            xTiles      = 1; 
     /// @brief Number of vertical 256 pixel tiles
@@ -340,7 +351,7 @@ using LayerExtents = std::vector<LayerExtent>;
  * 
  * These are in terms of the initial layer presented (most zoomed out layer).
  */
-struct Extent {
+struct IRIS_EXPORT Extent {
     /// @brief Top (lowest power) layer width extent in screen pixels
     uint32_t            width       = 1; 
     /// @brief Top (lowest power) layer height in screen pixels
@@ -354,7 +365,7 @@ struct Extent {
  * Assign this format to match the image source bits per
  * pixel and bit-ordering. 
  */
-enum Format : uint8_t {
+enum IRIS_EXPORT Format : uint8_t {
     /// @brief Invalid format indicating a format was not selected
     FORMAT_UNDEFINED    = 0 ,
     /// @brief 8-bit blue, 8-bit green, 8-bit red, no alpha
@@ -372,7 +383,7 @@ enum Format : uint8_t {
  * Provide the file location and the 
  * 
  */
-struct LocalSlideOpenInfo {
+struct IRIS_EXPORT LocalSlideOpenInfo {
     const char*         filePath;
     /**
      * @brief Local slide file encoding type
@@ -396,7 +407,7 @@ struct LocalSlideOpenInfo {
  * This requires use of the Iris Networking module.
  * 
  */
-struct NetworkSlideOpenInfo {
+struct IRIS_EXPORT NetworkSlideOpenInfo {
     const char*         slideID;
 };
 /**
@@ -418,7 +429,7 @@ struct NetworkSlideOpenInfo {
  * so the former should be preferred when available.
  * 
  */
-struct SlideOpenInfo {
+struct IRIS_EXPORT SlideOpenInfo {
     enum : uint8_t {
         SLIDE_OPEN_UNDEFINED,           // Default / invalid file
         SLIDE_OPEN_LOCAL,               // Locally accessible / Mapped File

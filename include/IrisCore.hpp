@@ -18,7 +18,7 @@ namespace Iris {
  * @brief Get the major version of Iris Core within the binaries.
  *
  */
-Version get_version                     () noexcept;
+Version IRIS_EXPORT get_version () noexcept;
 
 /**
  * @brief Create an Iris viewer instance.
@@ -34,7 +34,7 @@ Version get_version                     () noexcept;
  * @return Valid Viewer handle on success
  * @return Nullptr on failure
  */
-Viewer  create_viewer                   (const ViewerCreateInfo&) noexcept;
+Viewer IRIS_EXPORT create_viewer (const ViewerCreateInfo&) noexcept;
 
 /**
  * @brief Bind a viewer to an external surface controlled by the calling application.
@@ -48,7 +48,7 @@ Viewer  create_viewer                   (const ViewerCreateInfo&) noexcept;
  * @return true when the system has sucessfully configured
  * @return false when the system failed to effectively configure.
  */
-Result  viewer_bind_external_surface    (const ViewerBindExternalSurfaceInfo&) noexcept;
+Result IRIS_EXPORT viewer_bind_external_surface (const ViewerBindExternalSurfaceInfo&) noexcept;
 
 
 /**
@@ -59,9 +59,9 @@ Result  viewer_bind_external_surface    (const ViewerBindExternalSurfaceInfo&) n
  * 
  * @param viewer Iris::Viewer handle
  */
-Result viewer_unbind_surface            (const Viewer& viewer) noexcept;
+Result IRIS_EXPORT viewer_unbind_surface (const Viewer& viewer) noexcept;
 
-Result viewer_window_will_resize        (const ViewerResizeSurfaceInfo& viewer) noexcept;
+Result IRIS_EXPORT viewer_window_will_resize (const ViewerResizeSurfaceInfo& viewer) noexcept;
 /**
  * @brief Inform a viewer that the attached window was resized. 
  * 
@@ -71,7 +71,7 @@ Result viewer_window_will_resize        (const ViewerResizeSurfaceInfo& viewer) 
  * 
  * @param viewer Iris::Viewer handle
  */
-Result viewer_window_resized            (const Viewer& viewer) noexcept;
+Result IRIS_EXPORT viewer_window_resized (const Viewer& viewer) noexcept;
 
 /**
  * @brief Create and open a slide for viewing. 
@@ -86,35 +86,35 @@ Result viewer_window_resized            (const Viewer& viewer) noexcept;
  * @param viewer Iris::Viewer handle
  * @param info slide file information
  */
-Result viewer_open_slide                (const Viewer& viewer, const SlideOpenInfo& info) noexcept;
+Result IRIS_EXPORT viewer_open_slide (const Viewer& viewer, const SlideOpenInfo& info) noexcept;
 
 /**
  * @brief Close the current slide being viewed by the viewer.
  * 
  * @param viewer Iris::Viewer handle
  */
-Result viewer_close_slide               (const Viewer& viewer) noexcept;
+Result IRIS_EXPORT viewer_close_slide (const Viewer& viewer) noexcept;
 
 /**
  * @brief Translate the scope view when rendering a whole slide image.
  * 
  * @param viewer Iris::Viewer handle
  */
-Result viewer_engine_translate          (const Viewer& viewer, const ViewerTranslateScope&) noexcept;
+Result IRIS_EXPORT viewer_engine_translate (const Viewer& viewer, const ViewerTranslateScope&) noexcept;
 
 /**
  * @brief Change the scope view amound when rending a whole slide image.
  * 
  * @param viewer Iris::Viewer handle
  */
-Result viewer_engine_zoom               (const Viewer& viewer, const ViewerZoomScope&) noexcept;
+Result IRIS_EXPORT viewer_engine_zoom (const Viewer& viewer, const ViewerZoomScope&) noexcept;
 
 /**
  * @brief Insert an image slide annotation into the current active slide at the location within the screen.
  * 
  * @param viewer Iris::Viewer handle
  */
-Result viewer_annotate_slide            (const Viewer& viewer, const AnnotateSlideInfo&) noexcept;
+Result IRIS_EXPORT viewer_annotate_slide (const Viewer& viewer, const AnnotateSlideInfo&) noexcept;
 
 //  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 //     Iris Slide Image Handler                                             //
@@ -137,7 +137,7 @@ Result viewer_annotate_slide            (const Viewer& viewer, const AnnotateSli
  * @return Valid Iris::Slide handle on success
  * @return Nullptr on failure
  */
-Slide create_slide                      (const SlideOpenInfo& info);
+Slide IRIS_EXPORT create_slide (const SlideOpenInfo& info);
 
 //  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 //      Data Buffer Wrapper                                                 //
@@ -156,7 +156,7 @@ Slide create_slide                      (const SlideOpenInfo& info);
  * @return Valid Iris::Buffer handle on success but without data block backing.
  * @return Nullptr on failure
  */
-Buffer  Create_strong_buffer        ();
+Buffer IRIS_EXPORT Create_strong_buffer ();
 
 /**
  * @brief Create a **strong** blank buffer with an initial capacity of @ref "buffer_size_in_bytes" bytes long.
@@ -169,7 +169,7 @@ Buffer  Create_strong_buffer        ();
  * @return Valid Iris::Buffer handle with size 0 bytes on success
  * @return Nullptr on failure
  */
-Buffer  Create_strong_buffer        (size_t buffer_size_in_bytes);
+Buffer IRIS_EXPORT Create_strong_buffer (size_t buffer_size_in_bytes);
 
 /**
  * @brief Create a **strong** buffer and copy the data pointed to by @ref dataptr and @ref bytes in length (in bytes).
@@ -184,7 +184,7 @@ Buffer  Create_strong_buffer        (size_t buffer_size_in_bytes);
  * @return Nullptr on failure
  * 
  */
-Buffer Copy_strong_buffer_from_data (const void* data_ptr, size_t bytes);
+Buffer IRIS_EXPORT Copy_strong_buffer_from_data (const void* data_ptr, size_t bytes);
 
 /**
  * @brief Wrap a **weak buffer** around foreign data. This wrapper is used for implementing Iris Codec functions on
@@ -203,7 +203,7 @@ Buffer Copy_strong_buffer_from_data (const void* data_ptr, size_t bytes);
  * @return Nullptr on failure
  * 
  */
-Buffer  Wrap_weak_buffer_fom_data   (const void* const data_ref, size_t bytes);
+Buffer IRIS_EXPORT Wrap_weak_buffer_fom_data (const void* const data_ref, size_t bytes);
 
 /**
  * @brief Write data into a buffer in a safe manner. 
@@ -227,7 +227,7 @@ Buffer  Wrap_weak_buffer_fom_data   (const void* const data_ref, size_t bytes);
  * @return void* c-style data pointer to start writable memory (to populate with memcopy for example)
  * @return NULL-pointer in the event of failure.
  */
-void*   Buffer_write_into_buffer    (const Buffer& buffer, size_t bytes);
+void* IRIS_EXPORT Buffer_write_into_buffer (const Buffer& buffer, size_t bytes);
 
 /**
  * @brief Copy-extract the data from the underlying buffer structure. 
@@ -239,7 +239,7 @@ void*   Buffer_write_into_buffer    (const Buffer& buffer, size_t bytes);
  * @param data data pointer to copy the data into. If a null-ptr, only the @ref size will be returned.
  * @param bytes number of bytes copied out of the buffer handle
  */
-Result  Buffer_get_data             (const Buffer& buffer, void*& data, size_t& bytes);
+Result IRIS_EXPORT Buffer_get_data (const Buffer& buffer, void*& data, size_t& bytes);
 /**
  * @brief Change the strength of an Iris Buffer.
  * 
@@ -247,7 +247,7 @@ Result  Buffer_get_data             (const Buffer& buffer, void*& data, size_t& 
  * @param strength strength to assign the buffer
  * \sa BufferReferenceStrength for more details
  */
-Result  Buffer_change_strength      (const Buffer& buffer, BufferReferenceStrength strength);
+Result IRIS_EXPORT Buffer_change_strength (const Buffer& buffer, BufferReferenceStrength strength);
 }
 
 #endif /* IrisCore_h */
