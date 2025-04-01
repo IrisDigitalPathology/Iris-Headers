@@ -37,17 +37,16 @@
 #include <Windows.h>
 #endif
 #if defined(_MSC_VER)
-#ifdef _EXPORTING
+#endif
+
+#ifndef IRIS_EXPORT_API
+#define IRIS_EXPORT_API     false
+#endif
+#if     IRIS_EXPORT_API
    #define IRIS_DECLSPEC    __declspec(dllexport)
 #else
    #define IRIS_DECLSPEC    __declspec(dllimport)
 #endif
-#endif
-
-#ifndef IRIS_EXPORT_API
-#define IRIS_EXPORT_API     true
-#endif
-
 #if     IRIS_EXPORT_API
     #ifndef IRIS_EXPORT
     #if defined(_MSC_VER)
@@ -58,11 +57,7 @@
     #endif
 #else
     #ifndef IRIS_EXPORT
-    #if defined(_MSC_VER)
-    #define IRIS_EXPORT
-    #else
-    #define IRIS_EXPORT     __attribute__ ((visibility ("hidden")))
-    #endif
+    #define IRIS_EXPORT     // Default setting is hidden (see CMakeLists)
     #endif
 #endif
 #define TILE_PIX_LENGTH     256U
