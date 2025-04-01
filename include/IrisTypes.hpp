@@ -31,12 +31,10 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <condition_variable>
+
 #ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
-#endif
-#ifndef IRIS_EXPORT_API
-#define IRIS_EXPORT_API     true
 #endif
 #if defined(_MSC_VER)
 #ifdef _EXPORTING
@@ -45,10 +43,15 @@
    #define IRIS_DECLSPEC    __declspec(dllimport)
 #endif
 #endif
+
+#ifndef IRIS_EXPORT_API
+#define IRIS_EXPORT_API     true
+#endif
+
 #if     IRIS_EXPORT_API
     #ifndef IRIS_EXPORT
     #if defined(_MSC_VER)
-    #define IRIS_EXPORT     __declspec(dllexport)
+    #define IRIS_EXPORT     IRIS_DECLSPEC
     #else
     #define IRIS_EXPORT     __attribute__ ((visibility ("default")))
     #endif 
