@@ -36,28 +36,25 @@
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 #endif
-#if defined(_MSC_VER)
-#endif
 
 #ifndef IRIS_EXPORT_API
 #define IRIS_EXPORT_API     false
 #endif
 #if     IRIS_EXPORT_API
-   #define IRIS_DECLSPEC    __declspec(dllexport)
-#else
-   #define IRIS_DECLSPEC    __declspec(dllimport)
-#endif
-#if     IRIS_EXPORT_API
     #ifndef IRIS_EXPORT
     #if defined(_MSC_VER)
-    #define IRIS_EXPORT     IRIS_DECLSPEC
+    #define IRIS_EXPORT     __declspec(dllexport)
     #else
     #define IRIS_EXPORT     __attribute__ ((visibility ("default")))
     #endif 
     #endif
 #else
     #ifndef IRIS_EXPORT
-    #define IRIS_EXPORT     // Default setting is hidden (see CMakeLists)
+    #if defined(_MSC_VER)
+    #define IRIS_EXPORT     __declspec(dllimport)
+    #else
+    #define IRIS_EXPORT
+    #endif
     #endif
 #endif
 #define TILE_PIX_LENGTH     256U

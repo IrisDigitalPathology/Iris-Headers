@@ -203,10 +203,10 @@ public:
      * if resize changed the buffer by evaluating a comparison between data() before calling
      * and data() after calling.
      * 
-     * @param expected_size_bytes Size in bytes the buffer should be
+     * @param new_buffer_capacity Size in bytes the buffer should be
      * @return IRIS_SUCCESS on successfully resizing the buffer object
      */
-    Result      resize                      (size_t expected_size_bytes);
+    Result      change_capacity             (size_t new_buffer_capacity);
     /**
      * @brief Shrinks the underlying data block to fit the used space
      * 

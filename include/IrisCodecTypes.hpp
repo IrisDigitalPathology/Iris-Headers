@@ -122,6 +122,7 @@ enum IRIS_EXPORT ImageEncoding : uint8_t {
     IMAGE_ENCODING_PNG                      = 1,
     IMAGE_ENCODING_JPEG                     = 2,
     IMAGE_ENCODING_AVIF                     = 3,
+    IMAGE_ENCODING_DEFAULT                  = IMAGE_ENCODING_JPEG // v2025.1 - will change
 };
 enum IRIS_EXPORT ImageOrientation : uint16_t {
     ORIENTATION_0                           = 0x0000, // Half-precision 0.0
@@ -163,7 +164,7 @@ struct IRIS_EXPORT Metadata {
     /// Iris slide annotation groups
     AnnotationGroups annotationGroups;
     /// Microns per pixel (um per pixel) at layer 0 / the lowest resolution layer (0.f if no um scale)
-    float           micronsPerPixexl        = 0.f;
+    float           micronsPerPixel         = 0.f;
     /// Magnification coefficient used to convert scale to physical microscopic magnfication (0.f if not included)
     float           magnification           = 0.f;
 };
@@ -189,6 +190,23 @@ struct IRIS_EXPORT SlideTileReadInfo {
     Buffer          optionalDestination     = NULL;
     Format          desiredFormat           = Iris::FORMAT_R8G8B8A8;
 };
+struct IRIS_EXPORT AssociatedImageInfo {
+    using           Encoding                = ImageEncoding;
+    using           Orientation             = ImageOrientation;
+    
+    std::string     imageLabel;
+    uint32_t        width                   = 0;
+    uint32_t        height                  = 0;
+    Encoding        encoding                = IMAGE_ENCODING_UNDEFINED;
+    Format          sourceFormat            = Iris::FORMAT_UNDEFINED;
+    Orientation     orientation             = ORIENTATION_0;
+};
+struct IRIS_EXPORT AssociatedImageReadInfo {
+    Slide           slide                   = NULL;
+    std::string     imageLabel;
+    Buffer          optionalDestination     = NULL;
+    Format          desiredFormat           = Iris::FORMAT_R8G8B8A8;
+};
 // MARK: - CACHE TYPE DEFINITIONS
 enum IRIS_EXPORT CacheEncoding : uint8_t {
     CACHE_ENCODING_UNDEFINED                = 0,
@@ -204,6 +222,7 @@ enum IRIS_EXPORT CacheDataAccess {
     CACHE_ACCESS_DIRECT_NO_CODEC            = 1, /* Do not apply any compression codec */
 };
 struct IRIS_EXPORT CacheCreateInfo {
+    bool            unlink                  = true; /* Unlink to automatically free on close*/
     Context         context                 = nullptr;
     CacheEncoding   encodingType            = CACHE_ENCODING_UNDEFINED;
 };
@@ -243,6 +262,14 @@ enum IRIS_EXPORT EncoderStatus {
     ENCODER_ACTIVE,
     ENCODER_ERROR,
     ENCODER_SHUTDOWN,
+};
+
+/// If encoder derive enabled
+enum IRIS_EXPORT EncoderDeriveLayers {
+    ENCODER_DERIVE_OFF_USE_SOURCE   = 0,
+    ENCODER_DERIVE_2X_LAYERS,
+    ENCODER_DERIVE_3X_LAYERS,
+    ENCODER_DERIVE_4X_LAYERS,
 };
 struct IRIS_EXPORT EncodeSlideInfo {
     std::string     srcFilePath;

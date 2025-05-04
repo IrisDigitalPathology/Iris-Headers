@@ -145,7 +145,7 @@ void* __INTERNAL__Buffer::end() const
 Result __INTERNAL__Buffer::prepare(size_t bytes)
 {
     // If there are insufficient bytes, expand the buffer
-    return resize(_capacity + bytes);
+    return change_capacity(_capacity + bytes);
 }
 void* __INTERNAL__Buffer::append(size_t __S)
 {
@@ -156,7 +156,7 @@ void* __INTERNAL__Buffer::append(size_t __S)
     // If there are insufficient bytes, expand the buffer
     if (available_bytes() < __S) {
         // A resize failure returns a null pointer
-        if (resize(available_bytes() + __S) == IRIS_FAILURE)
+        if (change_capacity(_capacity + __S - available_bytes()) == IRIS_FAILURE)
             return NULL;
         // Ensure we didn't make the buffer smaller.
         // resize can do that and that would be awkward...
@@ -179,7 +179,7 @@ Result __INTERNAL__Buffer::append(void *__D, size_t __S)
     // If there are insufficient bytes, expand the buffer
     if (available_bytes() < __S) {
         // A resize failure returns a null pointer
-        if (resize(available_bytes() + __S) == IRIS_FAILURE)
+        if (change_capacity(available_bytes() + __S) == IRIS_FAILURE)
             return IRIS_FAILURE;
         // Ensure we didn't make the buffer smaller.
         // resize can do that and that would be awkward...
@@ -212,9 +212,9 @@ size_t __INTERNAL__Buffer::capacity() const
 }
 size_t __INTERNAL__Buffer::available_bytes() const
 {
-    return _capacity - _size;
+    return _capacity > _size ? _capacity - _size : 0;
 }
-Result __INTERNAL__Buffer::resize(size_t _NS)
+Result __INTERNAL__Buffer::change_capacity(size_t capacity)
 {
     // If you hit this asssert, you are attempting to
     // resize a weak reference. You CANNOT do this as
@@ -227,13 +227,13 @@ Result __INTERNAL__Buffer::resize(size_t _NS)
         return IRIS_FAILURE;
     
     // IF this is unnessary, return true
-    if (_NS == _capacity)
+    if (capacity == _capacity)
         return IRIS_SUCCESS;
     
     // Else reallocate the pointer, invalidating the old one
-    if (auto __ptr = std::realloc(_data, _NS)) {
-        _size = (_size < _NS) ? _size : _NS;
-        const_cast<size_t&> (_capacity) = _NS;
+    if (auto __ptr = std::realloc(_data, capacity)) {
+        _size = (_size < capacity) ? _size : capacity;
+        const_cast<size_t&> (_capacity) = capacity;
         const_cast<void*&>  (_data)     = __ptr;
         return IRIS_SUCCESS;
     }
@@ -241,6 +241,6 @@ Result __INTERNAL__Buffer::resize(size_t _NS)
 }
 Result __INTERNAL__Buffer::shrink_to_fit()
 {
-    return resize(_size);
+    return change_capacity(_size);
 }
 } // END IRIS NAMESPACE

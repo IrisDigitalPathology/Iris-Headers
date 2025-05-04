@@ -42,6 +42,12 @@ IRIS_EXPORT Result get_slide_info           (const Slide&, SlideInfo&) noexcept;
 /// Retrieve a slide tile pixel array
 IRIS_EXPORT Buffer read_slide_tile          (const SlideTileReadInfo&) noexcept;
 
+/// Retrieve information about an associatiated slide image with a specific tag
+IRIS_EXPORT Result get_associated_image_info(const Slide&, AssociatedImageInfo&) noexcept;
+
+/// Retrieve a slide associated image, if present
+IRIS_EXPORT Buffer read_associated_image    (const AssociatedImageReadInfo&) noexcept;
+
 /// Add an annotation to a slide object
 IRIS_EXPORT Result annotate_slide           (const Annotation&) noexcept;
 
