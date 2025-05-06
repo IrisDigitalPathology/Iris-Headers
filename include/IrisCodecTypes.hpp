@@ -104,7 +104,7 @@ enum IRIS_EXPORT Encoding : uint8_t {
     TILE_ENCODING_IRIS                      = 1,
     TILE_ENCODING_JPEG                      = 2,
     TILE_ENCODING_AVIF                      = 3,
-    ENCODING_DEFAULT                        = TILE_ENCODING_JPEG //v2025.1 - will change
+    TILE_ENCODING_DEFAULT                   = TILE_ENCODING_JPEG //v2025.1 - will change
 };
 enum IRIS_EXPORT MetadataType : uint8_t {
     METADATA_UNDEFINED                      = 0,
