@@ -101,6 +101,6 @@ IRIS_EXPORT Result set_encoder_src_cache    (const Encoder&, const Cache&) noexc
 
 /// Set an encoder object output directory path. Attempting to alter an active encoder will fail.
 IRIS_EXPORT Result set_encoder_dst_path     (const Encoder&, const std::string&) noexcept;
-/// Set
+
 }
 #endif /* IrisCodecCore_h */

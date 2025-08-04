@@ -265,19 +265,36 @@ enum IRIS_EXPORT EncoderStatus {
 };
 
 /// If encoder derive enabled
-enum IRIS_EXPORT EncoderDeriveLayers {
-    ENCODER_DERIVE_OFF_USE_SOURCE   = 0,
-    ENCODER_DERIVE_2X_LAYERS,
-    ENCODER_DERIVE_3X_LAYERS,
-    ENCODER_DERIVE_4X_LAYERS,
+struct IRIS_EXPORT EncoderDerivation {
+    enum {
+        ENCODER_DERIVE_2X_LAYERS,           // Will generate ~8 layers (256px->128,64,32,16,8,4,2,1)
+        ENCODER_DERIVE_4X_LAYERS,           // Will generate ~4 layers (256px->64,16,4,1)
+    }               layers                  = ENCODER_DERIVE_2X_LAYERS;
+    enum {
+        ENCODER_DOWNSAMPLE_AVERAGE,         // Downsampling by simple averaging
+        ENCODER_DOWNSAMPLE_SHARPEN,         // Downsampling while preserving high-freqency info
+    }               method                  = ENCODER_DOWNSAMPLE_AVERAGE;
 };
 struct IRIS_EXPORT EncodeSlideInfo {
+    using Derivation                        = EncoderDerivation;
     std::string     srcFilePath;
     std::string     dstFilePath;
     Format          srcFormat               = Iris::FORMAT_UNDEFINED;
     Encoding        desiredEncoding         = TILE_ENCODING_UNDEFINED;
     Format          desiredFormat           = Iris::FORMAT_UNDEFINED;
     Context         context                 = NULL;
+    Derivation*     derviation              = NULL;
+};
+struct IRIS_EXPORT EncodeStreamInfo {
+    using Derivation                        = EncoderDerivation;
+    std::string     dstFilePath;
+    uint32_t        width                   = 0;
+    uint32_t        height                  = 0;
+    Format          srcFormat               = Iris::FORMAT_UNDEFINED;
+    Encoding        desiredEncoding         = TILE_ENCODING_UNDEFINED;
+    Format          desiredFormat           = Iris::FORMAT_UNDEFINED;
+    Context         conxtext                = NULL;
+    Derivation      derviation;
 };
 struct IRIS_EXPORT EncoderProgress {
     EncoderStatus   status                  = ENCODER_INACTIVE;

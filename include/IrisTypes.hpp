@@ -330,9 +330,9 @@ struct IRIS_EXPORT AnnotateSlideInfo {
     /// @brief y-offset of the current scope view window where the image starts [0,1.f]
     float               y_offset    = 0.f;
     /// @brief Number of horizontal (x) pixels in the image annotation
-    uint32_t            width       = 0.f;
+    uint32_t            width       = 0U;
     /// @brief Number of vertical (y) pixels in the image annotation
-    uint32_t            height      = 0.f;
+    uint32_t            height      = 0U;
     /// @brief Encoded pixel data that comprises the image, width wide and hight tall
     Buffer              data;
 };
