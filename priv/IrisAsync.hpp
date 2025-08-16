@@ -48,6 +48,7 @@ class __INTERNAL__Pool {
     Threads         _threads;
     Mutex           _task_added_mtx; // Used only for conditional variable
     Notification    _task_added;     // Conditional variable notification
+    atomic_size     _pending;
     Status          status;
     
 public:
@@ -55,6 +56,7 @@ public:
     __INTERNAL__Pool                (const __INTERNAL__Pool&) = delete;
     __INTERNAL__Pool& operator =    (const __INTERNAL__Pool&) = delete;
    ~__INTERNAL__Pool                ();
+    size_t  pending_tasks           () const;
     void    issue_task              (const LambdaPtr&);
     Fence   issue_task_with_fence   (const LambdaPtr&);
     void    wait_until_complete     ();

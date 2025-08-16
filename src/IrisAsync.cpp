@@ -25,6 +25,7 @@ void __INTERNAL__Fence::wait_on_signal () {
 
 __INTERNAL__Pool::__INTERNAL__Pool (uint32_t thread_pool_size) :
 _threads    (thread_pool_size),
+_pending    (0),
 status      (POOL_ACTIVE)
 {
     // Start all of the callback threads
@@ -37,10 +38,14 @@ status      (POOL_ACTIVE)
 __INTERNAL__Pool::~__INTERNAL__Pool ()
 {
     wait_until_complete();
+    assert(!_pending && "Async Queue exiting with pending tasks.");
 }
 inline void WARN_INACTIVE_QUEUE()
 {
     std::cerr << "[WARNING] Iris Async Pool: Attempting to enqueue task to inactive queue\n";
+}
+size_t __INTERNAL__Pool::pending_tasks() const {
+    return _pending.load();
 }
 void __INTERNAL__Pool::issue_task(const LambdaPtr &lambda)
 {
@@ -52,6 +57,7 @@ void __INTERNAL__Pool::issue_task(const LambdaPtr &lambda)
         .callback       = lambda,
         .fenceOptional  = nullptr,
     });
+    _pending++;
     
     // And notify any waiting implementation threads
     _task_added.notify_one();
@@ -69,6 +75,7 @@ Fence __INTERNAL__Pool::issue_task_with_fence(const LambdaPtr &lambda)
         .callback       = lambda,
         .fenceOptional  = fence,
     });
+    _pending++;
     
     // And notify any waiting implementation threads
     _task_added.notify_one();
@@ -146,6 +153,8 @@ void __INTERNAL__Pool::process_tasks() {
                     fence->complete = true;
                     fence->complete.notify_all();
                 }
+                auto pending = _pending.load();
+                while (!_pending.compare_exchange_weak(pending, pending?pending-1:0));
             }
         } catch (std::runtime_error& error) {
             std::stringstream LOG;

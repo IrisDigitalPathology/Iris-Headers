@@ -266,11 +266,13 @@ enum IRIS_EXPORT EncoderStatus {
 
 /// If encoder derive enabled
 struct IRIS_EXPORT EncoderDerivation {
-    enum {
+    enum Layers {
+        ENCODER_DERIVE_UNDEFINED,
         ENCODER_DERIVE_2X_LAYERS,           // Will generate ~8 layers (256px->128,64,32,16,8,4,2,1)
         ENCODER_DERIVE_4X_LAYERS,           // Will generate ~4 layers (256px->64,16,4,1)
     }               layers                  = ENCODER_DERIVE_2X_LAYERS;
-    enum {
+    enum Method {
+        ENCODER_DOWNSAMPLE_UNDEFINED,
         ENCODER_DOWNSAMPLE_AVERAGE,         // Downsampling by simple averaging
         ENCODER_DOWNSAMPLE_SHARPEN,         // Downsampling while preserving high-freqency info
     }               method                  = ENCODER_DOWNSAMPLE_AVERAGE;
@@ -282,6 +284,7 @@ struct IRIS_EXPORT EncodeSlideInfo {
     Format          srcFormat               = Iris::FORMAT_UNDEFINED;
     Encoding        desiredEncoding         = TILE_ENCODING_UNDEFINED;
     Format          desiredFormat           = Iris::FORMAT_UNDEFINED;
+    unsigned        concurrency             = std::thread::hardware_concurrency();
     Context         context                 = NULL;
     Derivation*     derviation              = NULL;
 };
