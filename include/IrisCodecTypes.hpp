@@ -284,9 +284,10 @@ struct IRIS_EXPORT EncodeSlideInfo {
     Format          srcFormat               = Iris::FORMAT_UNDEFINED;
     Encoding        desiredEncoding         = TILE_ENCODING_UNDEFINED;
     Format          desiredFormat           = Iris::FORMAT_UNDEFINED;
+    bool            anonymize               = false;
     unsigned        concurrency             = std::thread::hardware_concurrency();
     Context         context                 = NULL;
-    Derivation*     derviation              = NULL;
+    Derivation*     derivation              = NULL;
 };
 struct IRIS_EXPORT EncodeStreamInfo {
     using Derivation                        = EncoderDerivation;
@@ -297,7 +298,7 @@ struct IRIS_EXPORT EncodeStreamInfo {
     Encoding        desiredEncoding         = TILE_ENCODING_UNDEFINED;
     Format          desiredFormat           = Iris::FORMAT_UNDEFINED;
     Context         conxtext                = NULL;
-    Derivation      derviation;
+    Derivation      derivation;
 };
 struct IRIS_EXPORT EncoderProgress {
     EncoderStatus   status                  = ENCODER_INACTIVE;
