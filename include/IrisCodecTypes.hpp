@@ -268,6 +268,7 @@ enum IRIS_EXPORT EncoderStatus {
 struct IRIS_EXPORT EncoderDerivation {
     enum Layers {
         ENCODER_DERIVE_UNDEFINED,
+        ENCODER_DERIVE_USE_SOURCE,
         ENCODER_DERIVE_2X_LAYERS,           // Will generate ~8 layers (256px->128,64,32,16,8,4,2,1)
         ENCODER_DERIVE_4X_LAYERS,           // Will generate ~4 layers (256px->64,16,4,1)
     }               layers                  = ENCODER_DERIVE_2X_LAYERS;
